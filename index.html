@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8" />
+  <title>Курс «Астролог з нуля» — Валерія</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/feather-icons"></script>
+  
+  <style>
+    /* ========================================================
+       1. БАЗОВІ ЗМІННІ ТА СТИЛІ
+       ======================================================== */
+    :root { 
+      --bg: #05050A; 
+      --text-main: #ffffff;
+      --text-muted: #a0a0b5;
+      --glass-bg: rgba(15, 15, 25, 0.4);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --accent: #8a2be2; 
+      --accent-secondary: #f39c12; 
+      --max-width: 1100px; 
+    }
+    
+    * { box-sizing: border-box; }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: var(--bg);
+      background: linear-gradient(135deg, #02010a 0%, #0a0a2a 40%, #110825 80%, #000000 100%);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ========================================================
+       2. ЖИВИЙ ФОН (КОСМІЧНІ ТУМАННОСТІ)
+       ======================================================== */
+    .bg-orbs {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: -1;
+      overflow: hidden;
+    }
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.4;
+      animation: float 30s infinite alternate ease-in-out;
+    }
+    .orb-1 {
+      width: 500px; height: 500px;
+      background: #4b0082; 
+      top: -100px; left: -100px;
+    }
+    .orb-2 {
+      width: 600px; height: 600px;
+      background: #191970; 
+      bottom: -150px; right: -100px;
+      animation-delay: -10s;
+    }
+    .orb-3 {
+      width: 300px; height: 300px;
+      background: rgba(243, 156, 18, 0.2); 
+      top: 40%; left: 50%;
+      animation-delay: -5s;
+    }
+    @keyframes float {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(150px, 100px) scale(1.2); }
+    }
+
+    .container {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 60px 20px 120px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px) scale(0.98);
+      transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* ========================================================
+       3. ГОЛОВНИЙ ЕКРАН (HERO) - БЕЗ РАМОК
+       ======================================================== */
+    .hero { 
+      display: flex;
+      flex-direction: row; 
+      justify-content: space-between;
+      align-items: center;
+      gap: 50px;
+      margin-bottom: 100px;
+      padding-top: 40px;
+    }
+
+    .hero-content {
+      flex: 1;
+      text-align: left;
+      z-index: 3;
+    }
+
+    .hero-image-wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Стиль для фото без фону */
+    .hero-image {
+      width: 100%;
+      max-width: 450px;
+      height: auto;
+      object-fit: contain;
+      animation: float-avatar 6s ease-in-out infinite;
+      /* Плавне розчинення тільки знизу фото, боки й верх лишаються чіткими */
+      -webkit-mask-image: linear-gradient(to bottom, black 0%, black 82%, transparent 100%);
+      mask-image: linear-gradient(to bottom, black 0%, black 82%, transparent 100%);
+      -webkit-mask-size: 100% 100%;
+      mask-size: 100% 100%;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+    }
+
+    @keyframes float-avatar {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 24px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 30px;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 25px;
+      box-shadow: 0 0 20px rgba(138, 43, 226, 0.2);
+      color: var(--accent-secondary);
+    }
+    .hero-badge .badge-icon { width: 16px; height: 16px; }
+    
+    .hero h1 {
+      margin: 0 0 20px 0;
+      font-size: clamp(40px, 5vw, 70px);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      background: linear-gradient(to right, #fff, var(--accent-secondary), var(--accent), #fff);
+      background-size: 300% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 8s linear infinite;
+    }
+
+    .hero-subtitle {
+      font-size: 18px;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      max-width: 90%;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .stat-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      padding: 12px 24px;
+      border-radius: 20px;
+      font-weight: 500;
+      color: #fff;
+      backdrop-filter: blur(10px);
+    }
+    .stat-badge .icon { width: 20px; height: 20px; color: var(--accent-secondary); flex-shrink: 0; }
+
+    /* ========================================================
+       4. ЗАГОЛОВКИ СЕКЦІЙ
+       ======================================================== */
+    .section-title {
+      font-size: 36px;
+      font-weight: 700;
+      margin: 100px 0 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      text-align: center;
+    }
+    .section-title .title-icon { color: var(--accent-secondary); width: 32px; height: 32px; }
+
+    /* ========================================================
+       5. ПРОГРАМА (КОМПАКТНИЙ АККОРДЕОН У 2 КОЛОНКИ)
+       ======================================================== */
+    .accordion-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 20px;
+    }
+
+    details.glass-accordion {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      height: fit-content;
+    }
+    details.glass-accordion:hover {
+      border-color: rgba(255,255,255,0.3);
+    }
+    
+    details.glass-accordion summary {
+      padding: 20px 25px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      list-style: none;
+      color: #fff;
+    }
+    details.glass-accordion summary::-webkit-details-marker { display: none; }
+    details.glass-accordion summary i { transition: transform 0.3s ease; color: var(--accent-secondary); }
+    details.glass-accordion[open] summary i { transform: rotate(180deg); }
+    
+    .accordion-content {
+      padding: 0 25px 25px 25px;
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.7;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      margin-top: 5px;
+      padding-top: 15px;
+    }
+    .accordion-content ul { margin: 0; padding-left: 20px; list-style-type: none; }
+    .accordion-content ul li { position: relative; margin-bottom: 10px; }
+    .accordion-content ul li::before {
+      content: '✨';
+      position: absolute;
+      left: -25px;
+      font-size: 12px;
+      top: 2px;
+    }
+
+    /* ========================================================
+       6. 3D КАРТОЧКИ (ФОРМАТ НАВЧАННЯ)
+       ======================================================== */
+    .grid-3d {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      perspective: 1200px;
+    }
+
+    .wow-card {
+      position: relative;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 40px 30px;
+      backdrop-filter: blur(20px);
+      transform-style: preserve-3d;
+      transition: transform 0.2s, border-color 0.3s;
+      height: 100%;
+    }
+    
+    .wow-card::before, .wow-card::after {
+      content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      pointer-events: none; opacity: 0; transition: opacity 0.3s; border-radius: 24px;
+    }
+    .wow-card::after {
+      background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.08) 0%, transparent 60%);
+      z-index: 2;
+    }
+
+    .wow-card:hover::after { opacity: 1; }
+    .wow-card:hover { border-color: rgba(255,255,255,0.3); z-index: 10; transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.5); }
+
+    .wow-card-content { position: relative; z-index: 1; pointer-events: none; }
+    
+    .wow-icon {
+      margin-bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      color: var(--accent-secondary);
+    }
+    .wow-icon svg, .wow-icon i { width: 30px; height: 30px; }
+    .wow-card h3 { margin: 0 0 12px; font-size: 22px; font-weight: 600; color: #fff;}
+    .wow-card p { margin: 0; font-size: 16px; color: var(--text-muted); line-height: 1.5; }
+
+    /* ========================================================
+       7. ЦІНА ТА КНОПКА CTA
+       ======================================================== */
+    .cta-section {
+      margin-top: 100px;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(138, 43, 226, 0.1), rgba(243, 156, 18, 0.1));
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      padding: 60px 30px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-section::before {
+      content: '🪐';
+      position: absolute;
+      font-size: 150px;
+      opacity: 0.05;
+      top: -30px;
+      right: -20px;
+      transform: rotate(15deg);
+    }
+
+    .price-block {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .price-old {
+      font-size: 24px;
+      color: #ff6b81;
+      text-decoration: line-through;
+      margin-bottom: 10px;
+    }
+
+    .price-new {
+      font-size: 56px;
+      font-weight: 800;
+      color: var(--accent-secondary);
+      line-height: 1;
+      text-shadow: 0 0 20px rgba(243, 156, 18, 0.4);
+    }
+
+    .seats-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 107, 129, 0.2);
+      color: #ff6b81;
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-bottom: 40px;
+      animation: pulse-danger 2s infinite;
+    }
+    .seats-left svg, .seats-left i { width: 18px; height: 18px; }
+
+    @keyframes pulse-danger {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, var(--accent-secondary), #d35400);
+      color: #fff;
+      text-decoration: none;
+      padding: 18px 45px;
+      font-size: 20px;
+      font-weight: 700;
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 15px 40px rgba(243, 156, 18, 0.6);
+      background: linear-gradient(135deg, #f1c40f, #e67e22);
+    }
+
+    /* ========================================================
+       АДАПТИВНІСТЬ (ГАРНЕ ОБІГРАВАННЯ НА ТЕЛЕФОНІ)
+       ======================================================== */
+    @media (max-width: 900px) {
+      .hero {
+        /* Текст спочатку, потім фото знизу */
+        flex-direction: column;
+        text-align: center;
+        gap: 0; /* Прибираємо розрив, щоб об'єднати композицію */
+      }
+      .hero-content { 
+        text-align: center; 
+        padding-bottom: 20px;
+      }
+      .hero-subtitle { 
+        margin: 0 auto 30px; 
+      }
+      .hero-stats { 
+        justify-content: center; 
+        margin-bottom: 10px; /* Відступ до фотографії */
+      }
+      .hero-image-wrapper {
+        /* Негативний відступ, щоб фотографія злегка "заходила" під текст */
+        margin-top: -20px;
+      }
+      .hero-image {
+        max-width: 320px; /* Трохи менша на телефоні */
+        /* Менша тінь для мобільних */
+        filter: drop-shadow(0 10px 20px rgba(138, 43, 226, 0.4));
+      }
+      .accordion-container { 
+        grid-template-columns: 1fr; 
+      }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Темні сфери-туманності на фоні -->
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<div class="container" id="mainContent">
+  
+  <!-- ================= ГОЛОВНИЙ ЕКРАН ================= -->
+  <header class="hero reveal active">
+    <div class="hero-content">
+      <div class="hero-badge"><i data-feather="star" class="badge-icon"></i> Базовий курс</div>
+      <h1>Ведичний астролог з нуля</h1>
+      <p class="hero-subtitle">Хочеш зрозуміти, навіщо ти тут? Я Валерія, ведичний астролог. Запрошую на курс, де ми розшифруємо твій «космічний код», навчимося читати натальні карти та віднайдемо твоє справжнє призначення за стародавніми знаннями Джйотіш.</p>
+      
+      <div class="hero-stats">
+        <div class="stat-badge"><i data-feather="moon" class="icon"></i> 6 місяців навчання</div>
+        <div class="stat-badge"><i data-feather="sun" class="icon"></i> 2 зустрічі на тиждень</div>
+      </div>
+    </div>
+
+    <div class="hero-image-wrapper">
+      <!-- Фото без рамки, ідеально для PNG -->
+      <img src="https://lh3.googleusercontent.com/d/15h9hIPcg5_UcObdn3U3VmkKtSRjut3HZ" alt="Астролог Валерія" class="hero-image">
+    </div>
+  </header>
+
+  <!-- ================= ПРОГРАМА КУРСУ ================= -->
+  <h2 class="section-title reveal"><i data-feather="book-open" class="title-icon"></i> Програма курсу</h2>
+  <div class="accordion-container reveal">
+    
+    <details class="glass-accordion">
+      <summary>1. Вступ до астрології (Джйотіш) <i data-feather="chevron-down"></i></summary>
+      <div class="accordion-content">
+        <ul>
+          <li>Історія та філософія</li>
+          <li>Відмінності ведичної та західної астрології</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="glass-accordion">
+      <summary>2. Знаки Зодіаку (Раші) <i data-feather="chevron-down"></i></summary>
+      <div class="accordion-content">
+        <ul>
+          <li>Вчимось будувати Натальну карту</li>
+          <li>Характеристика 12 знаків та стихії</li>
+          <li>Психологія кожного знаку</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="glass-accordion">
+      <summary>3. Планети (Грахи) <i data-feather="chevron-down"></i></summary>
+      <div class="accordion-content">
+        <ul>
+          <li>Сонце, Місяць, Марс, Меркурій, Юпітер, Венера, Сатурн</li>
+          <li>Раху та Кету</li>
+          <li>Природа, сила та слабкість планет</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="glass-accordion">
+      <summary>4. Дома гороскопу (Бхави) <i data-feather="chevron-down"></i></summary>
+      <div class="accordion-content">
+        <ul>
+          <li>Значення всіх 12 домів</li>
+          <li>Сфери життя та їх прояв</li>
+          <li>Управителі домів</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="glass-accordion">
+      <summary>5-7. Аспекти, Йоги та Достоїнства <i data-feather="chevron-down"></i></summary>
+      <div class="accordion-content">
+        <ul>
+          <li><b>Аспекти (Дришті):</b> як впливають на події та характер</li>
+          <li><b>З’єднання (Йоги):</b> сильні та складні йоги</li>
+          <li><b>Достоїнство:</b> екзальтація, падіння, власні/дружні/ворожі знаки</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="glass-accordion">
+      <summary>8-11. Карма, Раху та Кету <i data-feather="chevron-down"></i></summary>
+      <div class="accordion-content">
+        <ul>
+          <li><b>Атмакарака:</b> призначення душі та уроки</li>
+          <li><b>Транзити (Гочар):</b> вплив поточних планет</li>
+          <li><b>Раху та Кету:</b> кармічні вузли, минуле та майбутнє</li>
+          <li>Попередні втілення та духовні задачі</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="glass-accordion">
+      <summary>12-15. Сфери життя <i data-feather="chevron-down"></i></summary>
+      <div class="accordion-content">
+        <ul>
+          <li><b>Фінанси:</b> потенціал доходів, бізнес, інвестиції</li>
+          <li><b>Відносини:</b> карта кохання, партнерство</li>
+          <li><b>Діти:</b> потенціал народження, взаємини</li>
+          <li><b>Професія:</b> кар’єрний шлях, сильні сторони, реалізація</li>
+        </ul>
+      </div>
+    </details>
+
+    <details class="glass-accordion">
+      <summary>16-25. Практика та Прогнозування <i data-feather="chevron-down"></i></summary>
+      <div class="accordion-content">
+        <ul>
+          <li>Корекція гороскопу та практичні розбори карт</li>
+          <li>Покрокова схема читання натальної карти</li>
+          <li><b>Система даш:</b> Віншоттарі даша, важливі періоди</li>
+          <li>Прогнозування подій (рік, місяць) та Саде-Саті</li>
+          <li>Підсумковий іспит і сертифікація</li>
+        </ul>
+      </div>
+    </details>
+  </div>
+
+  <!-- ================= ФОРМАТ НАВЧАННЯ ================= -->
+  <h2 class="section-title reveal"><i data-feather="layers" class="title-icon"></i> Формат навчання</h2>
+  <div class="grid-3d reveal">
+    <div class="wow-card">
+      <div class="wow-card-content">
+        <div class="wow-icon"><i data-feather="monitor"></i></div>
+        <h3>Онлайн-уроки</h3>
+        <p>Навчання онлайн із доступом до записів усіх занять.</p>
+      </div>
+    </div>
+    <div class="wow-card">
+      <div class="wow-card-content">
+        <div class="wow-icon"><i data-feather="edit-3"></i></div>
+        <h3>Домашні завдання</h3>
+        <p>Практика з перевіркою робіт та детальними розборами карт.</p>
+      </div>
+    </div>
+    <div class="wow-card">
+      <div class="wow-card-content">
+        <div class="wow-icon"><i data-feather="message-circle"></i></div>
+        <h3>Підтримка в чаті</h3>
+        <p>Відповіді на запитання та спілкування у закритій групі.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= ЦІНА ТА КНОПКА (CTA) ================= -->
+  <div class="cta-section reveal">
+    <h2>Почніть свій шлях в астрології вже сьогодні</h2>
+    
+    <div class="price-block">
+      <div class="price-old">2500 грн/міс</div>
+      <div class="price-new">1800 грн/міс</div>
+    </div>
+    
+    <div class="seats-left"><i data-feather="alert-circle"></i> Залишилось всього кілька місць!</div>
+    <br>
+    
+    <a href="https://t.me/Astrology_Valerii?text=%D0%94%D0%BE%D0%B1%D1%80%D0%BE%D0%B3%D0%BE%20%D0%B4%D0%BD%D1%8F%2C%20%D0%BC%D0%B5%D0%BD%D0%B5%20%D0%B7%D0%B0%D1%86%D1%96%D0%BA%D0%B0%D0%B2%D0%B8%D0%B2%20%D0%B2%D0%B0%D1%88%20%D0%BA%D1%83%D1%80%D1%81%2C%20%D1%85%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BF%D0%B8%D1%81%D0%B0%D1%82%D0%B8%D1%81%D1%8F%2C%20%D1%87%D0%B8%20%D1%94%20%D1%89%D0%B5%20%D0%B2%D1%96%D0%BB%D1%8C%D0%BD%D1%96%20%D0%BC%D1%96%D1%81%D1%86%D1%8F%3F" target="_blank" class="btn-primary">
+      <i data-feather="send"></i> Записатися на курс
+    </a>
+  </div>
+
+</div>
+
+<script>
+  feather.replace();
+
+  function initScrollAnimations() {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  }
+
+  function init3DCards() {
+    if (window.innerWidth <= 768) return; 
+    const cards = document.querySelectorAll('.wow-card');
+    
+    cards.forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+        card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+      });
+    });
+  }
+
+  window.onload = () => {
+    initScrollAnimations();
+    init3DCards();
+  };
+</script>
+</body>
+</html>
